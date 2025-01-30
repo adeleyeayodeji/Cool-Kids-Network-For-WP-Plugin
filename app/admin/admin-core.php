@@ -61,6 +61,7 @@ class Admin_Core extends Base
 		wp_localize_script(COOL_KIDS_NETWORK_WP_PREFIX . 'main-script', COOL_KIDS_NETWORK_WP_PREFIX . 'object', [
 			'ajax_url' => admin_url('admin-ajax.php'),
 			'nonce' => wp_create_nonce(COOL_KIDS_NETWORK_WP_PREFIX . 'auth'),
+			'logout_url' => wp_logout_url(),
 		]);
 	}
 

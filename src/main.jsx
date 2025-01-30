@@ -109,4 +109,14 @@ jQuery(document).ready(function ($) {
 			},
 		});
 	});
+
+	/**
+	 * Logout button
+	 *
+	 * @since 1.0.0
+	 */
+	$(".wp_ckn_button").on("click", function () {
+		//redirect to logout url
+		window.location.href = wp_ckn_object.logout_url;
+	});
 });

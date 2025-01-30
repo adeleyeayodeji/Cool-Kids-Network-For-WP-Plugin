@@ -38,3 +38,9 @@ $country = get_user_meta($user_id, 'country', true);
 		<?php _e('Email:', 'cool-kids-network-wp'); ?> <?php echo wp_get_current_user()->user_email ?: __('Not set', 'cool-kids-network-wp'); ?>
 	</p>
 </div>
+
+<p style="margin-top: 20px;">
+	<a href="<?php echo wp_logout_url(site_url('/sign-in')); ?>" class="<?php echo COOL_KIDS_NETWORK_WP_PREFIX; ?>button">
+		<?php _e('Logout', 'cool-kids-network-wp'); ?>
+	</a>
+</p>
