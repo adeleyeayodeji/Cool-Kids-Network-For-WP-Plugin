@@ -1,0 +1,46 @@
+.wp_ckn_container {
+	form {
+		max-width: 400px;
+		margin: auto;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+	input,
+	button {
+		padding: 10px;
+	}
+	button {
+		background-color: #4caf50;
+		color: white;
+		border: none;
+		cursor: pointer;
+	}
+}
+
+.wp_ckn_notice-message {
+	color: red;
+	font-weight: bold;
+	margin: 10px 0;
+	padding: 10px;
+	border: 1px solid red;
+	border-radius: 5px;
+	width: fit-content;
+
+	&.success {
+		color: green;
+		border-color: green;
+	}
+}
+
+.wp_ckn_character-details {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	width: 100%;
+	max-width: 400px;
+
+	p {
+		margin: 0;
+	}
+}

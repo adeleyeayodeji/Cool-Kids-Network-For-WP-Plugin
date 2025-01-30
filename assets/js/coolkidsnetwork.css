@@ -1,0 +1,47 @@
+/*!*********************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./src/assets/sass/style.scss ***!
+  \*********************************************************************************************************************/
+.wp_ckn_container form {
+  max-width: 400px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.wp_ckn_container input,
+.wp_ckn_container button {
+  padding: 10px;
+}
+.wp_ckn_container button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.wp_ckn_notice-message {
+  color: red;
+  font-weight: bold;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid red;
+  border-radius: 5px;
+  width: fit-content;
+}
+.wp_ckn_notice-message.success {
+  color: green;
+  border-color: green;
+}
+
+.wp_ckn_character-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 400px;
+}
+.wp_ckn_character-details p {
+  margin: 0;
+}
+
+/*# sourceMappingURL=coolkidsnetwork.css.map*/
