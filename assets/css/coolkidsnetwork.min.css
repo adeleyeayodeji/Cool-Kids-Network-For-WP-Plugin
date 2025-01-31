@@ -44,4 +44,65 @@
   margin: 0;
 }
 
+.wp_ckn_button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none !important;
+}
+.wp_ckn_button:hover {
+  background-color: #e53935;
+}
+
+.cool-kids-network-wp-character-details {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 20px;
+}
+
+.all-users-list h3 {
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-size: 24px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+}
+
+.user-item {
+  background: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  transition: transform 0.2s ease;
+}
+
+.user-item:hover {
+  transform: translateX(5px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.user-item p {
+  margin: 8px 0;
+  color: #555;
+}
+
+.no-users-list {
+  text-align: center;
+  padding: 30px;
+  background: #fff5f5;
+  border: 1px solid #ffebeb;
+  border-radius: 8px;
+}
+
+.no-users-list p {
+  color: #dc3545;
+  font-size: 16px;
+  margin: 0;
+}
+
 /*# sourceMappingURL=coolkidsnetwork.min.css.map*/

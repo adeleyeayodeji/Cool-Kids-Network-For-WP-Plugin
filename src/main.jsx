@@ -16,6 +16,8 @@ jQuery(document).ready(function ($) {
 		e.preventDefault();
 		//form
 		const form = $(this);
+		//get button
+		const button = form.find("button");
 		//email
 		const email = form.find("input[name='email']").val();
 
@@ -34,8 +36,17 @@ jQuery(document).ready(function ($) {
 					.fadeOut()
 					.text("")
 					.removeClass("success");
+				//disable button
+				button.prop("disabled", true);
+				//change button text
+				button.text("Signing up...");
 			},
 			success: function (response) {
+				//enable button
+				button.prop("disabled", false);
+				//change button text
+				button.text("Sign up");
+
 				//check if response is success
 				if (response.success) {
 					$(".wp_ckn_notice-message")
@@ -49,6 +60,11 @@ jQuery(document).ready(function ($) {
 				}
 			},
 			error: function (xhr, status, error) {
+				//enable button
+				button.prop("disabled", false);
+				//change button text
+				button.text("Sign up");
+
 				console.log(xhr, status, error);
 				$(".wp_ckn_notice-message")
 					.text("An error occurred. Please try again.")
@@ -66,6 +82,8 @@ jQuery(document).ready(function ($) {
 		e.preventDefault();
 		//form
 		const form = $(this);
+		//get button
+		const button = form.find("button");
 		//email
 		const email = form.find("input[name='email']").val();
 
@@ -84,8 +102,17 @@ jQuery(document).ready(function ($) {
 					.fadeOut()
 					.text("")
 					.removeClass("success");
+				//disable button
+				button.prop("disabled", true);
+				//change button text
+				button.text("Logging in...");
 			},
 			success: function (response) {
+				//enable button
+				button.prop("disabled", false);
+				//change button text
+				button.text("Login");
+
 				if (response.success) {
 					$(".wp_ckn_notice-message")
 						.addClass("success")
@@ -102,6 +129,11 @@ jQuery(document).ready(function ($) {
 				}
 			},
 			error: function (xhr, status, error) {
+				//enable button
+				button.prop("disabled", false);
+				//change button text
+				button.text("Login");
+
 				console.log(xhr, status, error);
 				$(".wp_ckn_notice-message")
 					.text("An error occurred. Please try again.")

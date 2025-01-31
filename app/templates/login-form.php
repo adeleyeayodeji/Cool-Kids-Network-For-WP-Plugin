@@ -24,6 +24,13 @@ if (is_user_logged_in()) {
 			<?php _e('Log In', 'cool-kids-network-wp'); ?>
 		</button>
 
+		<p>
+			<?php _e('or register', 'cool-kids-network-wp'); ?>
+			<a href="<?php echo esc_url(home_url('/register')); ?>">
+				<?php _e('here', 'cool-kids-network-wp'); ?>
+			</a>
+		</p>
+
 		<div class="<?php echo COOL_KIDS_NETWORK_WP_PREFIX; ?>notice-message" style="display: none;"></div>
 	</form>
 </div>

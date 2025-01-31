@@ -15,35 +15,24 @@ if (!is_user_logged_in()) {
 	return;
 }
 
-//get user id
-$user_id = get_current_user_id();
-
-//get user meta
-$first_name = get_user_meta($user_id, 'first_name', true);
-$last_name = get_user_meta($user_id, 'last_name', true);
-$country = get_user_meta($user_id, 'country', true);
 //get user role
-$user_role = wp_get_current_user()->roles[0];
-//remove underscore from user role and capitalize first letter
-$user_role = ucfirst(str_replace('_', ' ', $user_role));
+$user_role = wp_get_current_user()->roles;
+
+//roles to check
+$advanced_roles_to_check = array('cooler_kid', 'coolest_kid');
+
+//check if user has cool_kid role
+if (in_array('cool_kid', $user_role)) {
+	//include cool_kid template
+	echo render_wp_ckn_template('character-details/cool-kid');
+}
+
+//check if user has coolest_cooler_kid role
+if (array_intersect($advanced_roles_to_check, $user_role)) {
+	//include coolest_cooler_kid template
+	echo render_wp_ckn_template('character-details/coolest-cooler-kid');
+}
 ?>
-<div class="<?php echo COOL_KIDS_NETWORK_WP_PREFIX; ?>character-details">
-	<p>
-		<?php _e('First Name:', 'cool-kids-network-wp'); ?> <?php echo esc_html($first_name) ?: __('Not set', 'cool-kids-network-wp'); ?>
-	</p>
-	<p>
-		<?php _e('Last Name:', 'cool-kids-network-wp'); ?> <?php echo esc_html($last_name) ?: __('Not set', 'cool-kids-network-wp'); ?>
-	</p>
-	<p>
-		<?php _e('Country:', 'cool-kids-network-wp'); ?> <?php echo esc_html($country) ?: __('Not set', 'cool-kids-network-wp'); ?>
-	</p>
-	<p>
-		<?php _e('Email:', 'cool-kids-network-wp'); ?> <?php echo wp_get_current_user()->user_email ?: __('Not set', 'cool-kids-network-wp'); ?>
-	</p>
-	<p>
-		<?php _e('Role:', 'cool-kids-network-wp'); ?> <?php echo esc_html($user_role) ?: __('Not set', 'cool-kids-network-wp'); ?>
-	</p>
-</div>
 
 <p style="margin-top: 20px;">
 	<a href="<?php echo wp_logout_url(site_url('/sign-in')); ?>" class="<?php echo COOL_KIDS_NETWORK_WP_PREFIX; ?>button">

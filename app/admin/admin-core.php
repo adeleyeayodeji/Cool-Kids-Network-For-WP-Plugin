@@ -25,6 +25,14 @@ if (!defined('ABSPATH')) {
 class Admin_Core extends Base
 {
 	/**
+	 * API Version
+	 *
+	 * @var string
+	 */
+	private $api_version = 'v1';
+
+
+	/**
 	 * Init
 	 *
 	 * @return void
@@ -43,6 +51,192 @@ class Admin_Core extends Base
 		add_shortcode(COOL_KIDS_NETWORK_WP_PREFIX . 'login', [$this, 'display_login_form']);
 		//character details shortcode [wp_ckn_character_details]
 		add_shortcode(COOL_KIDS_NETWORK_WP_PREFIX . 'character_details', [$this, 'display_character_details']);
+		// Register REST API routes
+		add_action('rest_api_init', [$this, 'register_rest_routes']);
+	}
+
+	/**
+	 * Register REST API routes
+	 *
+	 * @return void
+	 */
+	public function register_rest_routes()
+	{
+		/**
+		 * Get Auth Nonce
+		 *
+		 * @param WP_REST_Request $request
+		 * @return WP_REST_Response
+		 */
+		register_rest_route(COOL_KIDS_NETWORK_WP_PREFIX . $this->api_version, '/auth/nonce', [
+			'methods' => 'GET',
+			'callback' => [$this, 'get_auth_nonce'],
+			'permission_callback' => '__return_true',
+		]);
+
+		/**
+		 * Handle Role Change
+		 *
+		 * @param WP_REST_Request $request
+		 * @return WP_REST_Response
+		 */
+		register_rest_route(COOL_KIDS_NETWORK_WP_PREFIX . $this->api_version, '/user/role', [
+			'methods' => 'POST',
+			'callback' => [$this, 'handle_role_change'],
+			'args' => [
+				'role' => [
+					'required' => true,
+					'type' => 'string',
+					'description' => 'The role to assign to the user.',
+				],
+				'email' => [
+					'required' => false,
+					'type' => 'string',
+					'description' => 'The email address of the user.',
+				],
+				'first_name' => [
+					'required' => false,
+					'type' => 'string',
+					'description' => 'The first name of the user.',
+				],
+				'last_name' => [
+					'required' => false,
+					'type' => 'string',
+					'description' => 'The last name of the user.',
+				],
+			],
+			'permission_callback' => [$this, 'verify_api_auth'],
+		]);
+	}
+
+	/**
+	 * Get Auth Nonce
+	 *
+	 * @param WP_REST_Request $request
+	 * @return WP_REST_Response
+	 */
+	public function get_auth_nonce($request)
+	{
+		return new \WP_REST_Response(['nonce' => wp_create_nonce(COOL_KIDS_NETWORK_WP_PREFIX . 'auth_api')], 200);
+	}
+
+	/**
+	 * Verify API authentication
+	 *
+	 * @param WP_REST_Request $request
+	 * @return bool|WP_Error
+	 */
+	public function verify_api_auth($request)
+	{
+		//get auth header
+		$auth_header = $request->get_header('Authorization');
+
+		//check if auth header is empty
+		if (empty($auth_header)) {
+			return new \WP_Error(
+				'rest_forbidden',
+				'Authorization header is required.',
+				['status' => 401]
+			);
+		}
+
+		//get token
+		$token = str_replace('Bearer ', '', $auth_header);
+
+		//verify nonce
+		if (!wp_verify_nonce($token, COOL_KIDS_NETWORK_WP_PREFIX . 'auth_api')) {
+			return new \WP_Error(
+				'rest_forbidden',
+				'Invalid API key.',
+				['status' => 401]
+			);
+		}
+
+		//return true
+		return true;
+	}
+
+	/**
+	 * Handle role change request from 3rd party integration
+	 *
+	 * @param WP_REST_Request $request
+	 * @return WP_REST_Response
+	 */
+	public function handle_role_change($request)
+	{
+		try {
+			// Validate role
+			$valid_roles = ['cool_kid', 'cooler_kid', 'coolest_kid'];
+			$role = sanitize_text_field($request->get_param('role'));
+
+			if (!in_array($role, $valid_roles)) {
+				return new \WP_REST_Response([
+					'message' => 'Invalid role specified.',
+				], 400);
+			}
+
+			// Find user by email or name
+			$user = null;
+			$email = $request->get_param('email');
+			$first_name = $request->get_param('first_name');
+			$last_name = $request->get_param('last_name');
+
+			if (!empty($email)) {
+				//get user by email
+				$user = get_user_by('email', sanitize_email($email));
+			} elseif (!empty($first_name) && !empty($last_name)) {
+				//get first name and last name
+				$first_name = sanitize_text_field($first_name);
+				$last_name = sanitize_text_field($last_name);
+
+				//get users by first name and last name
+				$users = get_users([
+					'meta_query' => [
+						'relation' => 'AND',
+						[
+							'key' => 'first_name',
+							'value' => $first_name,
+							'compare' => '='
+						],
+						[
+							'key' => 'last_name',
+							'value' => $last_name,
+							'compare' => '='
+						]
+					]
+				]);
+
+				//check if users are found
+				if (!empty($users)) {
+					$user = $users[0];
+				}
+			}
+
+			//check if user is not set
+			if (!isset($user) || empty($user)) {
+				return new \WP_REST_Response([
+					'message' => 'User not found, please check the email or first name and last name.',
+				], 404);
+			}
+
+			// Update user role
+			$user->set_role($role);
+
+			//return success
+			return new \WP_REST_Response([
+				'message' => 'User role updated successfully.',
+				'user_id' => $user->ID,
+				'new_role' => $role
+			], 200);
+		} catch (Exception $e) {
+			//log error
+			error_log("Error: " . $e->getMessage() . " on line " . $e->getLine() . " in file " . $e->getFile());
+			//return error
+			return new \WP_REST_Response([
+				'message' => 'Internal server error: ' . $e->getMessage(),
+				'code' => 500,
+			], 500);
+		}
 	}
 
 	/**
@@ -66,30 +260,6 @@ class Admin_Core extends Base
 	}
 
 	/**
-	 * Render template
-	 *
-	 * @param string $template Template name
-	 * @return string
-	 */
-	public function render_template($template, $args = [])
-	{
-		//extract args
-		extract($args);
-
-		ob_start();
-
-		//check if file exists
-		if (file_exists(COOL_KIDS_NETWORK_WP_TEMPLATE_PATH . $template . '.php')) {
-			include COOL_KIDS_NETWORK_WP_TEMPLATE_PATH . $template . '.php';
-		} else {
-			throw new Exception('Template not found.');
-		}
-
-		//return the output
-		return ob_get_clean();
-	}
-
-	/**
 	 * Display character details
 	 *
 	 * @param array $atts Shortcode attributes
@@ -101,7 +271,7 @@ class Admin_Core extends Base
 			// Merge default attributes
 			$atts = shortcode_atts([], $atts);
 			//render template
-			return $this->render_template('character-details', $atts);
+			return render_wp_ckn_template('character-details', $atts);
 		} catch (Exception $e) {
 			//log error
 			error_log("Error: " . $e->getMessage() . " on line " . $e->getLine() . " in file " . $e->getFile());
@@ -122,7 +292,7 @@ class Admin_Core extends Base
 			// Merge default attributes
 			$atts = shortcode_atts([], $atts);
 			//render template
-			return $this->render_template('signup-form', $atts);
+			return render_wp_ckn_template('signup-form', $atts);
 		} catch (Exception $e) {
 			//log error
 			error_log("Error: " . $e->getMessage() . " on line " . $e->getLine() . " in file " . $e->getFile());
@@ -144,7 +314,7 @@ class Admin_Core extends Base
 			$atts = shortcode_atts([], $atts);
 
 			//render template
-			return $this->render_template('login-form', $atts);
+			return render_wp_ckn_template('login-form', $atts);
 		} catch (Exception $e) {
 			//log error
 			error_log("Error: " . $e->getMessage() . " on line " . $e->getLine() . " in file " . $e->getFile());
