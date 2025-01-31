@@ -45,14 +45,14 @@ module.exports = function (grunt) {
 							"core/**",
 							"vendor/**",
 							"cool-kids-network-wp.php",
-							"README.md",
+							"readme.md",
 							"composer.json",
 						],
 						dest: "cool-kids-network-wp/",
 						filter: function (filepath) {
 							// Ignore .logs, .gitignore, .map files, and .css files in assets/js
 							return !filepath.match(
-								/\.logs$|\.gitignore$|\.map$|assets\/js\/.*\.css$/
+								/\.logs$|\.gitignore$|\.map$|assets\/js\/.*\.css$/,
 							);
 						},
 					},
@@ -84,9 +84,9 @@ module.exports = function (grunt) {
 						grunt.log.writeln(stdout);
 						done();
 					}
-				}
+				},
 			);
-		}
+		},
 	);
 
 	// Register the delete_readme task
