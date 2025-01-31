@@ -37,7 +37,8 @@
     "php": ">=7.4"
   },
   "require-dev": {
-    "wp-coding-standards/wpcs": "^3.0",
+    "phpcsstandards/phpcsutils": "^1.0",
+    "phpcsstandards/phpcsextra": "^1.1",
     "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
     "phpcompatibility/phpcompatibility-wp": "^2.1",
     "phpunit/phpunit": "^9",

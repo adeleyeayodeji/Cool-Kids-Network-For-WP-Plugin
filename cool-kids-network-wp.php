@@ -11,7 +11,12 @@
  * License:         GPLv2 or later
  * License URI:     https://www.gnu.org/licenses/gpl-2.0.html
  *
- * @package         Cool_Kids_Network_WP
+ * @package  Cool_Kids_Network_WP
+ * @category Plugin
+ * @author Adeleye Ayodeji
+ * @copyright 2025 Adeleye Ayodeji
+ * @license GPLv2 or later
+ * @link https://www.adeleyeayodeji.com/
  */
 
 //check for security

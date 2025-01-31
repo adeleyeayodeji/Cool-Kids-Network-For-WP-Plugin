@@ -1,0 +1,13 @@
+{
+  "phpcs.enable": true,
+  "phpcs.standard": "WordPress",
+  "phpcbf.enable": true,
+  "phpcbf.documentFormattingProvider": true,
+  "phpcbf.onsave": true,
+  "phpcbf.standard": "WordPress",
+  "phpcbf.ignore": [
+    "wp-content/plugins/cool-kids-network-wp/vendor",
+    "wp-content/plugins/cool-kids-network-wp/node_modules",
+    "wp-content/plugins/cool-kids-network-wp/phpcs.xml"
+  ]
+}
